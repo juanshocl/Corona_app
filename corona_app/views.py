@@ -20,3 +20,7 @@ def login(request):
 
 def reset_password(request):
     return render(request,'reset-password.html',{})
+
+
+def questions(request):
+    return render(request,'questions.html',{})
