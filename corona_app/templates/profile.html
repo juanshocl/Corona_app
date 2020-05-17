@@ -10,12 +10,18 @@
         <div class="col-lg-4">
            <div class="card profile-card-2">
             <div class="card-img-block">
-                <img class="img-fluid" src="https://via.placeholder.com/800x500" alt="Card image cap">
+                <img class="img-fluid" src="https://static01.nyt.com/newsgraphics/2020/03/10/coronavirus-pathogen/0ee8f1a44b1932072653a0a75ff96486feb6f36d/covid-virus.png" alt="Card image cap">
             </div>
             <div class="card-body pt-5">
-                <img src="https://via.placeholder.com/110x110" alt="profile-image" class="profile">
-                <h5 class="card-title">Corona_Scrum</h5>
-                <p class="card-text">Apoyanos en combatir contra esta pandemia y de la mejor manera #QuedateEnCasa.</p>
+                <h5 class="card-title">Historia del coronavirus</h5>
+                <p align="justify" class="card-text">Los coronavirus son una familia de virus que se descubrió en la década de los 60 pero 
+                cuyo origen es todavía desconocido. Sus diferentes tipos provocan distintas enfermedades, desde un resfriado 
+                hasta un síndrome respiratorio grave (una forma grave de neumonía). <br>
+                Gran parte de los coronavirus no son peligrosos y se pueden tratar de forma eficaz. De hecho, la mayoría 
+                de las personas contraen en algún momento de su vida un coronavirus, generalmente durante su infancia. Aunque 
+                son más frecuentes en otoño o invierno, se pueden adquirir en cualquier época del año. <br>
+                El coronavirus debe su nombre al aspecto que presenta, ya que es muy parecido a una corona o un halo. Se trata 
+                de un tipo de virus presente sobre todo en los animales, pero también en los humanos.</p>
                 <div class="icon-block">
                   <a href="javascript:void();"><i class="fa fa-facebook bg-facebook text-white"></i></a>
 				  <a href="javascript:void();"> <i class="fa fa-twitter bg-twitter text-white"></i></a>
@@ -31,7 +37,7 @@
             <div class="card-body">
             <ul class="nav nav-tabs nav-tabs-primary top-icon nav-justified">
                 <li class="nav-item">
-                    <a href="javascript:void();" data-target="#messages" data-toggle="pill" class="nav-link"><i class="icon-envelope-open"></i> <span class="hidden-xs">Noticias</span></a>
+                    <a data-target="#messages" data-toggle="pill" ><i class="icon-envelope-open"></i> <span class="hidden-xs">Noticias</span></a>
                 </li>
             </ul>
 
@@ -42,40 +48,35 @@
 					 <i class="icon-info"></i>
 				    </div>
 				    <div class="alert-message">
-				      <span><strong>Info!</strong> Lorem Ipsum is simply dummy text.</span>
+				      <span><strong>Noticias!</strong> Informacion diaria</span>
 				    </div>
                   </div>
-                  <div class="table-responsive">
-                    <table class="table table-hover table-striped">
-                        <tbody>                                    
-                            <tr>
-                                <td>
-                                   <span class="float-right font-weight-bold">3 hrs ago</span> Here is your a link to the latest summary report from the..
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                   <span class="float-right font-weight-bold">Yesterday</span> There has been a request on your account since that was..
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                   <span class="float-right font-weight-bold">9/10</span> Porttitor vitae ultrices quis, dapibus id dolor. Morbi venenatis lacinia rhoncus. 
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                   <span class="float-right font-weight-bold">9/4</span> Vestibulum tincidunt ullamcorper eros eget luctus. 
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                   <span class="float-right font-weight-bold">9/4</span> Maxamillion ais the fix for tibulum tincidunt ullamcorper eros. 
-                                </td>
-                            </tr>
-                        </tbody> 
-                    </table>
-                  </div>
+                  <div class="container">
+                
+                <div align="justify" class="card">
+                        <div  class="card-body">
+                        {% if noticia %}
+                        {% for Noticias in noticia %}
+
+                            <div style="font-size:25px">
+                                {{Noticias.titular}}
+                            </div> <br>
+
+                            <div>
+                                {{Noticias.descripcion}}
+                            </div> <br>
+
+                            <div style="font-family: Times New Roman">
+                               Fuente: {{Noticias.fuente}}
+                            </div> <br>
+
+                        {% endfor %}
+                                    
+                                    
+                        {% endif %}
+                        </div>
+                        </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -94,3 +95,5 @@
    <!--Start Back To Top Button-->
     <a href="javaScript:void();" class="back-to-top"><i class="fa fa-angle-double-up"></i> </a>
 {% endblock %}
+
+

@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from django.template.context_processors import request
-
+from corona_app.models import Noticias
 # Create your views here.
 
 def index(request):
     return render(request,'index.html',{})
 
 def situation(request):
-    return render(request,'profile.html',{})
+    noticias = Noticias.objects.all()
+    contexto = {'noticia': noticias}
+    return render(request,'profile.html', contexto)
 
 def add_person(request):
     return render(request,'forms.html',{})
