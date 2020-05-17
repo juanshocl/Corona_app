@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from corona_app.views import listAPI, comunasAPI, regionAPI, ultimosreportesAPI, todosreportesAPI, activosAPI, deathsRegionAPI
+from corona_app.views import listAPI, comunasAPI, regionAPI, todosreportesAPI, activosAPI, deathsRegionAPI
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,6 +25,6 @@ urlpatterns = [
     path('region/', regionAPI.as_view(),name = 'regionapi' ),
     path('activos/', activosAPI.as_view(),name = 'activosapi' ),
     path('muertes/', deathsRegionAPI.as_view(),name = 'muertesregionapi' ),
-    path('ultimosreportes/', ultimosreportesAPI.as_view(),name = 'ultimosreportesapi' ),
+    #path('ultimosreportes/', ultimosreportesAPI.as_view(),name = 'ultimosreportesapi' ),
     path('todosreportes/', todosreportesAPI.as_view(),name = 'todosreportesapi' ),
 ]

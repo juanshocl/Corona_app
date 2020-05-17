@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'proyecto_corona.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'testapi',
+        'NAME': 'corona_app',
         'USER': 'postgres',
         'PASSWORD': 'eJ2Qfjj2rV',
         'HOST': 'localhost',

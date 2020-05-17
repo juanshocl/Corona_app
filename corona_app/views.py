@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.template.context_processors import request
 from django.views.generic import ListView
-from corona_app.models import reportes, reportexcomuna, comuna, region, activesCase, deathsporRegion
+from corona_app.models import reportes, comuna, region, activesCase, deathsporRegion
 import csv
 import urllib.request
 from pip._vendor import requests
@@ -38,7 +38,7 @@ def reset_password(request):
 # Create your views here.
 
 class listAPI(ListView):
-    model = reportexcomuna
+    model = comuna
     template_name = 'listAPI.html'
 
 class comunasAPI(ListView):
@@ -90,9 +90,6 @@ class regionAPI(ListView):
         context = {}
         return context
 
-class ultimosreportesAPI(ListView):
-    model = reportexcomuna
-    template_name = 'ultimosreportes.html'
 
 class activosAPI(ListView):
     model = activesCase
@@ -157,7 +154,7 @@ class deathsRegionAPI(ListView):
 
 
 class todosreportesAPI(ListView):
-    model = reportexcomuna
+    model = reportes
     template_name = 'todosreportes.html'
 
     def get_context_data(self, **kwargs):

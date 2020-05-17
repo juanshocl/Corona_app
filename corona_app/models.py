@@ -44,12 +44,3 @@ class deathsporRegion(models.Model):
     DDate = models.DateField(auto_now=False, auto_now_add=False, default=None)
     DCodRegion = models.ForeignKey(region, on_delete=models.CASCADE)
     Ddeaths = models.FloatField(default=None)
-
-
-class reportexcomuna(models.Model):
-    region = models.CharField(max_length=50)
-    cod_region = models.CharField(max_length=50)
-    comuna = models.CharField(max_length=50, default=None)
-    comunaCodComuna = models.CharField(max_length=50)
-    poblacion = models.CharField(max_length=50)
-    #taza = models.IntegerField(default=None)
