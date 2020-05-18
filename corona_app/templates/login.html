@@ -31,6 +31,7 @@
    <!-- end loader -->
 
 <!-- Start wrapper-->
+{% if user.is_anonymous %}
  <div id="wrapper">
 
  <div class="loader-wrapper"><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>
@@ -40,12 +41,19 @@
 		 	<div class="text-center">
 		 		<img src="{% static 'images/logo-icon.png' %}" alt="logo icon">
 		 	</div>
-		  <div class="card-title text-uppercase text-center py-3">Iniciar Sesión</div>
-		    <form>
+      <div class="card-title text-uppercase text-center py-3">Iniciar Sesión</div>
+
+      <!-- Form para el login -->
+		    <form method="POST">{% csrf_token %}
 			  <div class="form-group">
+          {% if status == 'ERROR' %}
+            <div class="card-footer text-center py-3 bg-danger">Credenciales Incorrecta, Compruebe si las credenciales ingresadas son correctas</div>
+            <br>
+          {% endif %}
 			  <label for="exampleInputUsername" class="sr-only">Username</label>
 			   <div class="position-relative has-icon-right">
-				  <input type="email" id="exampleInputUsername" class="form-control input-shadow" placeholder="Ingrese su correo electronico">
+           <!-- Input correo electronico / Usuario Admin -->
+				  <input type="text" id="exampleInputUsername" name="txtUsernameLogin" class="form-control input-shadow" placeholder="Ingrese su Nombre de Usuario">
 				  <div class="form-control-position">
 					  <i class="icon-user"></i>
 				  </div>
@@ -54,7 +62,8 @@
 			  <div class="form-group">
 			  <label for="exampleInputPassword" class="sr-only">Password</label>
 			   <div class="position-relative has-icon-right">
-				  <input type="password" id="exampleInputPassword" class="form-control input-shadow" placeholder="Ingrese su contraseña">
+           <!-- Input Contraseña  -->
+				  <input type="password" id="exampleInputPassword" name="txtPassLogin" class="form-control input-shadow" placeholder="Ingrese su contraseña">
 				  <div class="form-control-position">
 					  <i class="icon-lock"></i>
 				  </div>
@@ -71,8 +80,12 @@
         <a href="{% url 'reset_password' %}">Contraseña Olvidada</a>
 			 </div>
 			</div>
-			 <button type="button" class="btn btn-light btn-block">Iniciar Sesión</button>
-			 </form>
+       <button type="submit" name="submit" class="btn btn-light btn-block">Iniciar Sesión</button>
+       <button class="btn btn-light btn-block"><a href="{% url 'index' %}">Volver a la pagina de inicio</a></button>
+       </form>
+       
+
+
 		   </div>
 		  </div>
 	     </div>
@@ -80,7 +93,7 @@
      <!--Start Back To Top Button-->
     <a href="javaScript:void();" class="back-to-top"><i class="fa fa-angle-double-up"></i> </a>
     <!--End Back To Top Button-->
-	
+    {% else %}
 	<!--start color switcher-->
    <div class="right-sidebar">
     <div class="switcher-icon">
@@ -119,7 +132,11 @@
    </div>
   <!--end color switcher-->
 	
-	</div><!--wrapper-->
+  </div><!--wrapper-->
+  
+  <div class="card-header text-center"><h1>Lo sentimos Usted Ya tiene una sesión Iniciada</h1></div>
+  <div class="card-header text-center"><h2><a class="text-warning mb-0" href="{% url 'index' %}">Click aquí para volver a la pagina de inicio</a></h2></div>
+{% endif %}
 	
   <script src="{% static 'js/jquery.min.js' %}"></script>
   <script src="{% static 'js/popper.min.js' %}"></script>

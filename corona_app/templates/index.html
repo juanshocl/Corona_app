@@ -9,6 +9,12 @@
   <!--Start Dashboard Content-->
 	<div class="row">
      <div class="col-12 col-lg-12 col-xl-12">
+      {% if user.is_authenticated %}
+      {% if user.is_staff %}
+      <div class="card-header">Bienvenido Administrador, recuerde tener cuidado con la modificación de datos para evitar conflictos con la información</div>
+      {% endif %}
+    {% endif %}
+
 	    <div class="card">
 		 <div class="card-header">Contagiados Por Región
 		   <div class="card-action">
@@ -17,11 +23,11 @@
 			  <i class="icon-options"></i>
 			 </a>
 				<div class="dropdown-menu dropdown-menu-right">
-				<a class="dropdown-item" href="javascript:void();">Action</a>
-				<a class="dropdown-item" href="javascript:void();">Another action</a>
-				<a class="dropdown-item" href="javascript:void();">Something else here</a>
-				<div class="dropdown-divider"></div>
-				<a class="dropdown-item" href="javascript:void();">Separated link</a>
+        <a class="dropdown-item" href="javascript:void();">Filtrar Por Comuna</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="javascript:void();">Filtrar Por Región</a>
+        <div class="dropdown-divider"></div>
+				<a class="dropdown-item" href="javascript:void();">Ver Casos Activos</a>
 			   </div>
 			  </div>
 		   </div>

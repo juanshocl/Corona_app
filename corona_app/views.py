@@ -2,6 +2,13 @@ from django.shortcuts import render
 from django.template.context_processors import request
 from django.views.generic import ListView
 from corona_app.models import reportes, comuna, region, activesCase, deathsporRegion
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 import csv
 import urllib.request
 from pip._vendor import requests
@@ -10,6 +17,8 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 import codecs
+
+
 
 
 # Create your views here.
@@ -26,8 +35,31 @@ def add_person(request):
 def statistics(request):
     return render(request,'tables.html',{})
 
-def login(request):
-    return render(request,'login.html',{})
+def login_view(request):
+    status = ''
+    mensaje = ''
+    if request.method == 'POST':
+        username = request.POST.get('txtUsernameLogin')
+        password = request.POST.get('txtPassLogin')
+        user = authenticate(request, username = username, password = password)
+        mensaje = user
+        print(mensaje)
+        if user:
+            login(request, user)
+            status = 'OK'
+            return HttpResponseRedirect(reverse('index'))
+        else:
+            status = 'ERROR'
+            messages.error(request,'Error al iniciar sesión :c')
+    variables = {'status':status,
+                 'mensaje':mensaje}
+    return render(request,'login.html',variables)
+
+@login_required(login_url = 'login_view')
+def logout_view(request):
+    logout(request)
+    return(redirect('login_view'))
+
 
 def reset_password(request):
     return render(request,'reset-password.html',{})
