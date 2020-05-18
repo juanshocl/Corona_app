@@ -21,7 +21,7 @@ def situation(request):
     return render(request,'profile.html',{})
 
 def add_person(request):
-    return render(request,'forms.html',{})
+    return render(request,'forms.html',{'list':list})
 
 def statistics(request):
     return render(request,'tables.html',{})
@@ -31,6 +31,7 @@ def login(request):
 
 def reset_password(request):
     return render(request,'reset-password.html',{})
+
 
 
 
