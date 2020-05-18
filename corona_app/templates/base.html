@@ -83,7 +83,7 @@
 
 
           <li class="sidebar-header">OTROS</li>
-          <li><a href="javaScript:void();"><i class="zmdi zmdi-coffee text-danger"></i> <span>Información Extra</span></a></li>
+          <li><a href="{% url 'questions' %}"><i class="zmdi zmdi-coffee text-danger"></i> <span>Preguntas frecuentes</span></a></li>
           <li><a href="javaScript:void();"><i class="zmdi zmdi-chart-donut text-success"></i> <span>Proveedores</span></a></li>
           <li><a href="javaScript:void();"><i class="zmdi zmdi-share text-info"></i> <span>Sobre Nosotros</span></a></li>
     
@@ -156,14 +156,14 @@
     </section>
 	
 	<!--Start footer-->
-	<footer class="footer">
+	{% comment %} <footer class="footer">
       <div class="container">
         <div class="text-center">
           Copyright © 2020 Corona Scrum
         </div>
       </div>
     </footer>
-	<!--End footer-->
+	<!--End footer--> {% endcomment %}
 	
   <!--start color switcher-->
    <div class="right-sidebar">

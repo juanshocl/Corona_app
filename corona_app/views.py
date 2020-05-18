@@ -66,8 +66,6 @@ def reset_password(request):
 
 
 
-
-
 # Create your views here.
 
 class listAPI(ListView):
@@ -227,4 +225,6 @@ class todosreportesAPI(ListView):
         context = {}
         return context
 
+def questions(request):
+    return render(request,'questions.html',{})
 
