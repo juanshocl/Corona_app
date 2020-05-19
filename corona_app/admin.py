@@ -12,7 +12,7 @@ class comunaAdmin(admin.ModelAdmin):
 
 @admin.register(reportes)
 class reportesAdmin(admin.ModelAdmin):
-    list_display = ('RDate','RComuna','RConfirmed','RActive')
+    list_display = ('RDate','RComuna','RConfirmed','RActive', 'RRecovered')
 
 @admin.register(activesCase)
 class activesCaseAdmin(admin.ModelAdmin):

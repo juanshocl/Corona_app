@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.template.context_processors import request
 from django.views.generic import ListView
 from corona_app.models import reportes, comuna, region, activesCase, deathsporRegion
+
 import csv
 import urllib.request
 from pip._vendor import requests
@@ -10,12 +11,31 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 import codecs
+#Rest Framework
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import viewsets
+from rest_framework import permissions
+from corona_app.serializers import ChartDataSerializer
+from rest_framework.renderers import JSONRenderer
 
 
 # Create your views here.
 
 def index(request):
-    return render(request,'index.html',{})
+    labels = []
+    data = []
+
+    query = reportes.objects.order_by('RDate')
+    for rep in query:
+        labels.append(rep.RDate)
+        data.append(rep.RConfirmed)
+
+
+    return render(request,'index.html',{
+        'labels': labels,
+        'data': data,
+        })
 
 def situation(request):
     return render(request,'profile.html',{})
@@ -178,6 +198,12 @@ class todosreportesAPI(ListView):
                     actives = activesCase.objects.get(AcCod_comuna=df[3][j], AcDate = df[i][0]).AcCantidad
                 except activesCase.DoesNotExist:
                     actives = float(0)
+
+                try:
+                    recovered = activesCase.objects.get(AcCod_comuna=df[3][j], AcDate = df[i][0]).AcCantidad - float(dato)
+                except activesCase.DoesNotExist:
+                    recovered = float(0)
+                
                     
                 
                 _, created = reportes.objects.get_or_create(
@@ -185,6 +211,7 @@ class todosreportesAPI(ListView):
                 RComuna = comuna.objects.get(CodComuna=df[3][j]),
                 RConfirmed = float(dato),
                 RActive = float(actives),
+                RRecovered = abs(float(recovered)),
                 #RDeath = 1,
                 # RSymptomatic = 1,
                 # RAsymptomatic = 1,
@@ -194,4 +221,7 @@ class todosreportesAPI(ListView):
         context = {}
         return context
 
-
+class ChartDataViewSet(viewsets.ModelViewSet):
+    renderer_classes = [JSONRenderer]
+    queryset = reportes.objects.all().order_by('RDate')
+    serializer_class = ChartDataSerializer
