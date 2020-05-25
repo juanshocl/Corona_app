@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.template.context_processors import request
 from django.views.generic import ListView
-from corona_app.models import reportes, comuna, region, activesCase, deathsporRegion
+from corona_app.models import reportes, comuna, region, activesCase, deathsporRegion, RRDate
+from django.db.models import Avg, Max, Min, Sum, Count, Q
 
 import csv
 import urllib.request
@@ -18,6 +19,9 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from corona_app.serializers import ChartDataSerializer
 from rest_framework.renderers import JSONRenderer
+
+from django.views.generic import TemplateView
+from chartjs.views.lines import BaseLineChartView
 
 
 # Create your views here.
@@ -51,8 +55,6 @@ def login(request):
 
 def reset_password(request):
     return render(request,'reset-password.html',{})
-
-
 
 
 # Create your views here.
@@ -205,13 +207,16 @@ class todosreportesAPI(ListView):
                     recovered = float(0)
                 
                     
-                
+                _, created = RRDate.objects.get_or_create(
+                # id = UuidCreate(),
+                RDDate = df[i][0])
+
                 _, created = reportes.objects.get_or_create(
                 RDate = df[i][0],
                 RComuna = comuna.objects.get(CodComuna=df[3][j]),
                 RConfirmed = float(dato),
                 RActive = float(actives),
-                RRecovered = abs(float(recovered)),
+                RRecovered = abs(recovered),
                 #RDeath = 1,
                 # RSymptomatic = 1,
                 # RAsymptomatic = 1,
@@ -225,3 +230,49 @@ class ChartDataViewSet(viewsets.ModelViewSet):
     renderer_classes = [JSONRenderer]
     queryset = reportes.objects.all().order_by('RDate')
     serializer_class = ChartDataSerializer
+
+
+class LineChartJSONView(BaseLineChartView):
+    def get_labels(self):
+        x_ax = []
+        
+        queryset = RRDate.objects.all().order_by('-RDDate')[:3]
+
+        for i in reversed(queryset):
+             x_ax.append(i.RDDate)
+    
+        return x_ax
+
+    def get_providers(self):
+        """Return names of datasets."""
+        reg = []
+        regiones = region.objects.all().order_by('Codregion')
+
+        for k in regiones:
+            reg.append(k.RegionName)
+        #print(reg)
+        return reg
+
+    def get_data(self):
+        """Return 3 datasets to plot."""
+        dias = RRDate.objects.all().order_by('-RDDate')[:3]
+        valores = []        
+        for i in reversed(dias):
+            queryset = reportes.objects.values('RComuna__Reg').filter(RDate = i.RDDate).annotate(Tot_Region=Sum('RConfirmed')).order_by('RComuna__Reg')
+            valores.append(queryset)
+        largo = int(len(valores))
+        ancho = int(len(valores[1]))
+        datos = np.arange((largo*ancho),dtype=np.int64).reshape(largo, ancho)
+        for i in range(0,largo):
+            cont = 0
+            g = valores[i]
+            for j in g:
+                datos[i][cont] = j['Tot_Region']
+                cont = cont + 1
+        
+        datos = datos.transpose()   
+        return datos.tolist()
+
+
+line_chart = TemplateView.as_view(template_name='line_chart.html')
+line_chart_json = LineChartJSONView.as_view()

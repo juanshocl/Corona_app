@@ -24,7 +24,6 @@ class comuna(models.Model):
     def __str__(self):
         return self.ComunaName
     
-
 class activesCase(models.Model):
     AcCod_comuna = models.ForeignKey(comuna, on_delete=models.CASCADE)
     AcDate = models.DateField(auto_now=False, auto_now_add=False, default=None)
@@ -43,11 +42,15 @@ class reportes(models.Model):
     # RSymptomatic = models.FloatField(default=None)
     # RAsymptomatic = models.FloatField(default=None)
     #RTaza =models.FloatField(default=None)
-    def __str__(self):
-        return self.RDate
+    
+    # def __str__(self):
+    #     return self.RDate
     
     def get_comuna(self):
         return self.RComuna.ComunaName
+    
+    class Meta:
+        ordering = ["-RDate"]
 
 class deathsporRegion(models.Model):
     DDate = models.DateField(auto_now=False, auto_now_add=False, default=None)
@@ -56,3 +59,10 @@ class deathsporRegion(models.Model):
 
     def __str__(self):
         return self.DDate
+
+class RRDate(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    RDDate = models.DateField(auto_now=False, auto_now_add=False, default=None)
+
+    # def __str__(self):
+    #     return self.RDate
