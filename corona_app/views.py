@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.template.context_processors import request
 from django.views.generic import ListView
 from corona_app.models import reportes, comuna, region, activesCase, deathsporRegion, RRDate
-from django.db.models import Avg, Max, Min, Sum, Count, Q
+from django.db.models import Avg, Max, Min, Sum, Count
 
 import csv
 import urllib.request
@@ -27,18 +27,48 @@ from chartjs.views.lines import BaseLineChartView
 # Create your views here.
 
 def index(request):
-    labels = []
-    data = []
+    #Obtencion de datos desde la Base de datos.
+    dia = RRDate.objects.all().order_by('-RDDate')[:3]
+    diaanterior = int(reportes.objects.filter(RDate = dia[1].RDDate).aggregate(Sum('RConfirmed'))['RConfirmed__sum'])
+    dosAntes = int(reportes.objects.filter(RDate = dia[2].RDDate).aggregate(Sum('RConfirmed'))['RConfirmed__sum'])
+    
 
-    query = reportes.objects.order_by('RDate')
-    for rep in query:
-        labels.append(rep.RDate)
-        data.append(rep.RConfirmed)
+    Confirmados = int(reportes.objects.filter(RDate = dia[0].RDDate).aggregate(Sum('RConfirmed'))['RConfirmed__sum'])
+    ConfirmRepAnterior = int(reportes.objects.filter(RDate = dia[1].RDDate).aggregate(Sum('RConfirmed'))['RConfirmed__sum'])
+    Activos = int(reportes.objects.filter(RDate = dia[0].RDDate).aggregate(Sum('RActive'))['RActive__sum'])
+    ActivosRepAnterior = int(reportes.objects.filter(RDate = dia[1].RDDate).aggregate(Sum('RActive'))['RActive__sum'])
+    Nuevos = Confirmados - diaanterior
+    #Totales
+    TotActives = Activos
+    TotNuevos = Nuevos
+    TotContagiados = Confirmados
+    TotalFallecidosDiaAnterior = int(deathsporRegion.objects.filter(DDate = dia[1].RDDate).aggregate(Sum('Ddeaths'))['Ddeaths__sum'])
+    TotalFallecidos = int(deathsporRegion.objects.filter(DDate = dia[0].RDDate).aggregate(Sum('Ddeaths'))['Ddeaths__sum'])
+    TotalRecuperados = Confirmados - Activos
+    TotalRecuperadosRepAnterior = ConfirmRepAnterior - ActivosRepAnterior
+    #Porcentajes
+    PorActivoReport = float(((TotContagiados - diaanterior)*100)/diaanterior)
+    PorCasoNuevo = float(((diaanterior - dosAntes)*100)/dosAntes)
+    PorTotContagios = float((Confirmados - diaanterior)*100)/diaanterior
+    PorTotFallecidos = float(((TotalFallecidos - TotalFallecidosDiaAnterior )*100))/TotalFallecidosDiaAnterior
+    PorTotRecuperados = float(((TotalRecuperados - TotalRecuperadosRepAnterior )*100)/TotalRecuperadosRepAnterior)
+
+    #Table, Trae los Top 10 del ultimo dia del reporte    
+    table = reportes.objects.filter(RDate=dia[0].RDDate).order_by('-RConfirmed')[:10]
 
 
     return render(request,'index.html',{
-        'labels': labels,
-        'data': data,
+        'activos': TotActives,
+        'nuevos': TotNuevos,
+        'contagiados': TotContagiados,
+        'totfallecidos': TotalFallecidos,
+        'totrecuperados' : TotalRecuperados,
+        'PorActivosIncre': PorActivoReport,
+        'PorCasoNuevo':PorCasoNuevo,
+        'PorTotCont' : PorTotContagios,
+        'PorTotFall' : PorTotFallecidos,
+        'PorTotReco' : PorTotRecuperados,
+        'tablas': table,
         })
 
 def situation(request):
@@ -176,6 +206,7 @@ class deathsRegionAPI(ListView):
 
 
 class todosreportesAPI(ListView):
+    #Confirmados Incrementales
     model = reportes
     template_name = 'todosreportes.html'
 

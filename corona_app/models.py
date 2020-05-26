@@ -12,7 +12,7 @@ class region(models.Model):
     Population = models.FloatField(default = None)
     
     def __str__(self):
-        return self.Codregion
+        return self.RegionName
     
 
 class comuna(models.Model):
@@ -48,6 +48,9 @@ class reportes(models.Model):
     
     def get_comuna(self):
         return self.RComuna.ComunaName
+    
+    def get_region(self):
+        return self.RComuna.Reg.RegionName
     
     class Meta:
         ordering = ["-RDate"]

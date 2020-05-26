@@ -6,11 +6,65 @@
   <div class="content-wrapper">
     <div class="container-fluid">
 
+
   <!--Start Dashboard Content-->
+  	<div class="card mt-3">
+    <div class="card-content">
+        <div class="row row-group m-0">
+            <div class="col-12 col-lg-6 col-xl-3 border-light">
+                <div class="card-body">
+                  <h5 class="text-white mb-0">{{activos}}<span class="float-right"><i class="fa fa-eye"></i></span></h5>
+                    <div class="progress my-3" style="height:3px;">
+                       <div class="progress-bar" style="width:55%"></div>
+                    </div>
+                  <p class="mb-0 text-white small-font">Total de casos activos <span class="float-right">{{PorActivosIncre|floatformat}}% {% if PorActivosIncre > 0 %}<i class="zmdi zmdi-long-arrow-up">{% else %}<i class="zmdi zmdi-long-arrow-down">{% endif %}</i></span></p>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 col-xl-3 border-light">
+                <div class="card-body">
+                  <h5 class="text-white mb-0">{{nuevos}} <span class="float-right"><i class="zmdi zmdi-male-female"></i></span></h5>
+                    <div class="progress my-3" style="height:3px;">
+                       <div class="progress-bar" style="width:55%"></div>
+                    </div>
+                  <p class="mb-0 text-white small-font">Casos Nuevos  <span class="float-right">{{PorCasoNuevo|floatformat}}% {% if PorCasoNuevo > 0 %}<i class="zmdi zmdi-long-arrow-up">{% else %}<i class="zmdi zmdi-long-arrow-down">{% endif %}</i></span></p>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 col-xl-3 border-light">
+                <div class="card-body">
+                  <h5 class="text-white mb-0">{{contagiados}} <span class="float-right"><i class="fa fa-bug"></i></span></h5>
+                    <div class="progress my-3" style="height:3px;">
+                       <div class="progress-bar" style="width:55%"></div>
+                    </div>
+                  <p class="mb-0 text-white small-font">Total de contagiados <span class="float-right">{{PorTotCont|floatformat}}%  {% if PorTotCont > 0 %}<i class="zmdi zmdi-long-arrow-up">{% else %}<i class="zmdi zmdi-long-arrow-down">{% endif %}</i></span></p>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 col-xl-3 border-light">
+                <div class="card-body">
+                  <h5 class="text-white mb-0">{{totfallecidos}} <span class="float-right"><i class="zmdi zmdi-mood-bad"></i></span></h5>
+                    <div class="progress my-3" style="height:3px;">
+                       <div class="progress-bar" style="width:55%"></div>
+                    </div>
+                  <p class="mb-0 text-white small-font">Total de fallecidos<span class="float-right">{{PorTotFall|floatformat}}%  {% if PorTotFall > 0 %}<i class="zmdi zmdi-long-arrow-up">{% else %}<i class="zmdi zmdi-long-arrow-down">{% endif %}</i></span></p>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 col-xl-3 border-light">
+                <div class="card-body">
+                  <h5 class="text-white mb-0">{{totrecuperados}} <span class="float-right"><i class="zmdi zmdi-case-check"></i></span></h5>
+                    <div class="progress my-3" style="height:3px;">
+                       <div class="progress-bar" style="width:55%"></div>
+                    </div>
+                  <p class="mb-0 text-white small-font">Total de personas recuperadas <span class="float-right">{{PorTotReco|floatformat}}%  {% if PorTotReco > 0 %}<i class="zmdi zmdi-long-arrow-up">{% else %}<i class="zmdi zmdi-long-arrow-down">{% endif %}</i></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>  
+
+  <!-- Fin datos de numero-->
 	<div class="row">
      <div class="col-12 col-lg-12 col-xl-12">
 	    <div class="card">
-		 <div class="card-header">Contagiados Por Región
+		 <div class="card-header">Distribucion de Contagios reportados por Región
 		   <div class="card-action">
 			 <div class="dropdown">
 			 {% comment %} <a href="javascript:void();" class="dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown">
@@ -43,7 +97,7 @@
                       options: {
             maintainAspectRatio: false,
             legend: {
-                display: false,
+                display: true,
                 labels: {
                     fontColor: '#ddd',
                     boxWidth: 40
@@ -81,6 +135,12 @@
                   
               });
       </script>
+
+{% comment %} {% block charts %}
+
+{% endblock charts %} {% endcomment %}
+
+
 			</div>
 		 </div>
 		</div>
@@ -90,65 +150,31 @@
 	<div class="row">
 	 <div class="col-12 col-lg-12">
 	   <div class="card">
-	     <div class="card-header">Tabla de Contagiados por Centro Medico</div>
+	     <div class="card-header">Top 10 de comunas con mas Contagios en el ultimo reporte nivel Nacional</div>
 	       <div class="table-responsive">
-          <table class="table align-items-center table-flush table-borderless">
+          <table id ="dtCovid" class="table align-items-center table-flush table-borderless">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Estado</th>
-              <th>Centro Medico</th>
-              <th>Fecha De Alerta</th>
+              <th>Fecha</th>
+              <th>Region</th>
+              <th>Comuna</th>
+              <th>Nuevos Confirmados</th>
+              <th>Activos</th>
+              <th>Recuperados</th>
             </tr>
           </thead>
             <tbody>
+             {% for tab in tablas %}
               <tr>
-                <td>2</td>
-                <td>Recuperado</td>
-                <td>Del Carmen</td>
-                <td>03 Aug 2017</td>
+                <td>{{tab.RDate}}</td>
+                <td>{{tab.RComuna.Reg}}</td>
+                <td>{{tab.RComuna}}</td>
+                <td>{{tab.RConfirmed|floatformat}}</td>
+                <td>{{tab.RActive|floatformat}}</td>
+                <td>{{tab.RRecovered|floatformat}}</td>
                 <td><div style="height: 3px;"></div></td>
               </tr>
-
-              <tr>
-                <td>3</td>
-                <td>Fallecido</td>
-                <td>Del Carmen</td>
-                <td>03 Aug 2017</td>
-                <td><div style="height: 3px;"></div></td>
-              </tr>
-
-              <tr>
-                <td>4</td>
-                <td>Recuperado</td>
-                <td>Del Carmen</td>
-                <td>03 Aug 2017</td>
-                <td><div style="height: 3px;"></div></td>
-              </tr>
-
-              <tr>
-                <td>5</td>
-                <td>Infectado</td>
-                <td>Del Carmen</td>
-                <td>03 Aug 2017</td>
-                <td><div style="height: 3px;"></div></td>
-              </tr>
-
-              <tr>
-                <td>6</td>
-                <td>Recuperado</td>
-                <td>Del Carmen</td>
-                <td>03 Aug 2017</td>
-                <td><div style="height: 3px;"></div></td>
-              </tr>
-    
-            <tr>
-              <td>7</td>
-              <td>Recuperado</td>
-              <td>Del Carmen</td>
-              <td>03 Aug 2017</td>
-              <td><div style="height: 3px;"></div></td>
-            </tr>
+            {% endfor %}
           </tbody></table>
         </div>
 	   </div>
