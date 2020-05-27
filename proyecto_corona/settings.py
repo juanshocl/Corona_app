@@ -84,13 +84,8 @@ WSGI_APPLICATION = 'proyecto_corona.wsgi.application'
 # }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'corona_app',
-        'USER': 'postgres',
-        'PASSWORD': 'eJ2Qfjj2rV',
-        'HOST': 'localhost',
-        'PORT': 5432,
-
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
