@@ -15,7 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from corona_app.views import listAPI, comunasAPI, regionAPI, todosreportesAPI, activosAPI, deathsRegionAPI
+from corona_app.views import listAPI, comunasAPI, regionAPI, todosreportesAPI, activosAPI, deathsRegionAPI, ChartDataViewSet, line_chart, line_chart_json
+from rest_framework import routers, serializers
+
+
+router = routers.DefaultRouter()
+router.register('chardata', ChartDataViewSet)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +33,11 @@ urlpatterns = [
     path('muertes/', deathsRegionAPI.as_view(),name = 'muertesregionapi' ),
     #path('ultimosreportes/', ultimosreportesAPI.as_view(),name = 'ultimosreportesapi' ),
     path('todosreportes/', todosreportesAPI.as_view(),name = 'todosreportesapi' ),
+    path('', include(router.urls)),
+    #path('api/chart/data/', ChartDataViewSet.as_view()),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('chart', line_chart, name='line_chart'),
+    path('chartJSON', line_chart_json, name='line_chart_json')
+    
+
 ]

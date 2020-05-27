@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.template.context_processors import request
 from django.views.generic import ListView
-from corona_app.models import reportes, comuna, region, activesCase, deathsporRegion
+from corona_app.models import reportes, comuna, region, activesCase, deathsporRegion,RRDate
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -9,6 +9,8 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.db.models import Avg, Max, Min, Sum, Count
+
 import csv
 import urllib.request
 from pip._vendor import requests
@@ -17,6 +19,16 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 import codecs
+#Rest Framework
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import viewsets
+from rest_framework import permissions
+from corona_app.serializers import ChartDataSerializer
+from rest_framework.renderers import JSONRenderer
+
+from django.views.generic import TemplateView
+from chartjs.views.lines import BaseLineChartView
 
 
 
@@ -24,7 +36,49 @@ import codecs
 # Create your views here.
 
 def index(request):
-    return render(request,'index.html',{})
+    #Obtencion de datos desde la Base de datos.
+    dia = RRDate.objects.all().order_by('-RDDate')[:3]
+    diaanterior = int(reportes.objects.filter(RDate = dia[1].RDDate).aggregate(Sum('RConfirmed'))['RConfirmed__sum'])
+    dosAntes = int(reportes.objects.filter(RDate = dia[2].RDDate).aggregate(Sum('RConfirmed'))['RConfirmed__sum'])
+    
+
+    Confirmados = int(reportes.objects.filter(RDate = dia[0].RDDate).aggregate(Sum('RConfirmed'))['RConfirmed__sum'])
+    ConfirmRepAnterior = int(reportes.objects.filter(RDate = dia[1].RDDate).aggregate(Sum('RConfirmed'))['RConfirmed__sum'])
+    Activos = int(reportes.objects.filter(RDate = dia[0].RDDate).aggregate(Sum('RActive'))['RActive__sum'])
+    ActivosRepAnterior = int(reportes.objects.filter(RDate = dia[1].RDDate).aggregate(Sum('RActive'))['RActive__sum'])
+    Nuevos = Confirmados - diaanterior
+    #Totales
+    TotActives = Activos
+    TotNuevos = Nuevos
+    TotContagiados = Confirmados
+    TotalFallecidosDiaAnterior = int(deathsporRegion.objects.filter(DDate = dia[1].RDDate).aggregate(Sum('Ddeaths'))['Ddeaths__sum'])
+    TotalFallecidos = int(deathsporRegion.objects.filter(DDate = dia[0].RDDate).aggregate(Sum('Ddeaths'))['Ddeaths__sum'])
+    TotalRecuperados = Confirmados - Activos
+    TotalRecuperadosRepAnterior = ConfirmRepAnterior - ActivosRepAnterior
+    #Porcentajes
+    PorActivoReport = float(((TotContagiados - diaanterior)*100)/diaanterior)
+    PorCasoNuevo = float(((diaanterior - dosAntes)*100)/dosAntes)
+    PorTotContagios = float((Confirmados - diaanterior)*100)/diaanterior
+    PorTotFallecidos = float(((TotalFallecidos - TotalFallecidosDiaAnterior )*100))/TotalFallecidosDiaAnterior
+    PorTotRecuperados = float(((TotalRecuperados - TotalRecuperadosRepAnterior )*100)/TotalRecuperadosRepAnterior)
+
+    #Table, Trae los Top 10 del ultimo dia del reporte    
+    table = reportes.objects.filter(RDate=dia[0].RDDate).order_by('-RConfirmed')[:10]
+
+
+    return render(request,'index.html',{
+        'activos': TotActives,
+        'nuevos': TotNuevos,
+        'contagiados': TotContagiados,
+        'totfallecidos': TotalFallecidos,
+        'totrecuperados' : TotalRecuperados,
+        'PorActivosIncre': PorActivoReport,
+        'PorCasoNuevo':PorCasoNuevo,
+        'PorTotCont' : PorTotContagios,
+        'PorTotFall' : PorTotFallecidos,
+        'PorTotReco' : PorTotRecuperados,
+        'tablas': table,
+        })
 
 def situation(request):
     return render(request,'profile.html',{})
@@ -63,7 +117,6 @@ def logout_view(request):
 
 def reset_password(request):
     return render(request,'reset-password.html',{})
-
 
 
 # Create your views here.
@@ -185,6 +238,7 @@ class deathsRegionAPI(ListView):
 
 
 class todosreportesAPI(ListView):
+    #Confirmados Incrementales
     model = reportes
     template_name = 'todosreportes.html'
 
@@ -209,13 +263,23 @@ class todosreportesAPI(ListView):
                     actives = activesCase.objects.get(AcCod_comuna=df[3][j], AcDate = df[i][0]).AcCantidad
                 except activesCase.DoesNotExist:
                     actives = float(0)
-                    
+
+                try:
+                    recovered = activesCase.objects.get(AcCod_comuna=df[3][j], AcDate = df[i][0]).AcCantidad - float(dato)
+                except activesCase.DoesNotExist:
+                    recovered = float(0)
                 
+                    
+                _, created = RRDate.objects.get_or_create(
+                # id = UuidCreate(),
+                RDDate = df[i][0])
+
                 _, created = reportes.objects.get_or_create(
                 RDate = df[i][0],
                 RComuna = comuna.objects.get(CodComuna=df[3][j]),
                 RConfirmed = float(dato),
                 RActive = float(actives),
+                RRecovered = abs(recovered),
                 #RDeath = 1,
                 # RSymptomatic = 1,
                 # RAsymptomatic = 1,
@@ -228,3 +292,53 @@ class todosreportesAPI(ListView):
 def questions(request):
     return render(request,'questions.html',{})
 
+class ChartDataViewSet(viewsets.ModelViewSet):
+    renderer_classes = [JSONRenderer]
+    queryset = reportes.objects.all().order_by('RDate')
+    serializer_class = ChartDataSerializer
+
+
+class LineChartJSONView(BaseLineChartView):
+    def get_labels(self):
+        x_ax = []
+        
+        queryset = RRDate.objects.all().order_by('-RDDate')[:3]
+
+        for i in reversed(queryset):
+             x_ax.append(i.RDDate)
+    
+        return x_ax
+
+    def get_providers(self):
+        """Return names of datasets."""
+        reg = []
+        regiones = region.objects.all().order_by('Codregion')
+
+        for k in regiones:
+            reg.append(k.RegionName)
+        #print(reg)
+        return reg
+
+    def get_data(self):
+        """Return 3 datasets to plot."""
+        dias = RRDate.objects.all().order_by('-RDDate')[:3]
+        valores = []        
+        for i in reversed(dias):
+            queryset = reportes.objects.values('RComuna__Reg').filter(RDate = i.RDDate).annotate(Tot_Region=Sum('RConfirmed')).order_by('RComuna__Reg')
+            valores.append(queryset)
+        largo = int(len(valores))
+        ancho = int(len(valores[1]))
+        datos = np.arange((largo*ancho),dtype=np.int64).reshape(largo, ancho)
+        for i in range(0,largo):
+            cont = 0
+            g = valores[i]
+            for j in g:
+                datos[i][cont] = j['Tot_Region']
+                cont = cont + 1
+        
+        datos = datos.transpose()   
+        return datos.tolist()
+
+
+line_chart = TemplateView.as_view(template_name='line_chart.html')
+line_chart_json = LineChartJSONView.as_view()

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from corona_app.models import region, comuna, reportes, activesCase, deathsporRegion
+from corona_app.models import region, comuna, reportes, activesCase, deathsporRegion, RRDate
 
 # Register your models here.
 @admin.register(region)
@@ -12,7 +12,7 @@ class comunaAdmin(admin.ModelAdmin):
 
 @admin.register(reportes)
 class reportesAdmin(admin.ModelAdmin):
-    list_display = ('RDate','RComuna','RConfirmed','RActive')
+    list_display = ('RDate','RComuna','RConfirmed','RActive', 'RRecovered')
 
 @admin.register(activesCase)
 class activesCaseAdmin(admin.ModelAdmin):
@@ -23,5 +23,9 @@ class activesCaseAdmin(admin.ModelAdmin):
 class deathsporRegionAdmin(admin.ModelAdmin):
     list_display = ('DDate', 'DCodRegion','Ddeaths')
 
+
+@admin.register(RRDate)
+class DDateAdmin(admin.ModelAdmin):
+    list_display = ('id','RDDate')
 
     

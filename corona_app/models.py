@@ -12,7 +12,7 @@ class region(models.Model):
     Population = models.FloatField(default = None)
     
     def __str__(self):
-        return self.Codregion
+        return self.RegionName
     
 
 class comuna(models.Model):
@@ -23,24 +23,49 @@ class comuna(models.Model):
 
     def __str__(self):
         return self.ComunaName
-
+    
 class activesCase(models.Model):
     AcCod_comuna = models.ForeignKey(comuna, on_delete=models.CASCADE)
     AcDate = models.DateField(auto_now=False, auto_now_add=False, default=None)
     AcCantidad = models.FloatField(default=None)
 
+    def __str__(self):
+        return self.AcCod_comuna
 
 class reportes(models.Model):
     RDate = models.DateField(auto_now=False, auto_now_add=False, default=None)
     RComuna = models.ForeignKey(comuna, on_delete=models.CASCADE)
     RConfirmed = models.FloatField(default=None)
     RActive = models.FloatField(default=None)
+    RRecovered = models.FloatField(default=None)
     #RDeath = models.FloatField(default=None)
     # RSymptomatic = models.FloatField(default=None)
     # RAsymptomatic = models.FloatField(default=None)
     #RTaza =models.FloatField(default=None)
+    
+    # def __str__(self):
+    #     return self.RDate
+    
+    def get_comuna(self):
+        return self.RComuna.ComunaName
+    
+    def get_region(self):
+        return self.RComuna.Reg.RegionName
+    
+    class Meta:
+        ordering = ["-RDate"]
 
 class deathsporRegion(models.Model):
     DDate = models.DateField(auto_now=False, auto_now_add=False, default=None)
     DCodRegion = models.ForeignKey(region, on_delete=models.CASCADE)
     Ddeaths = models.FloatField(default=None)
+
+    def __str__(self):
+        return self.DDate
+
+class RRDate(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    RDDate = models.DateField(auto_now=False, auto_now_add=False, default=None)
+
+    # def __str__(self):
+    #     return self.RDate
