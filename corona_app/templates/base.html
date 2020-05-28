@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="es">
+
 <head>
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -13,7 +14,7 @@
   <script src="{% static 'js/pace.min.js' %}"></script>
   
   <!--favicon-->
-  <link rel="stylesheet" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+  <link rel="icon" href="{% static 'images/favicon.ico' %} " type="image/x-icon">
   <!-- Vector CSS -->
   {% comment %} <link href="{% static 'plugins/vectormap/jquery-jvectormap-2.0.2.css' %}" rel="stylesheet"/> {% endcomment %}
   <!-- simplebar CSS-->
@@ -30,7 +31,7 @@
   <link href="{% static 'css/app-style.css' %}" rel="stylesheet"/>
   
 </head>
-<body>
+
   <body class="bg-theme bg-theme1">
     <!-- Start wrapper-->
      <div id="wrapper">
@@ -64,6 +65,14 @@
               <i class="zmdi zmdi-format-list-bulleted"></i> <span>Nuevo Registro</span>
             </a>
           </li>
+            {% if user.is_authenticated %}
+            <li>
+            <!-- Modificar el href de este a -->
+            <a href="{% url 'listapi' %}">
+              <i class="zmdi zmdi-format-list-bulleted"></i> <span>Carga de Datos Manual</span>
+            </a>
+          </li>
+          {% endif %}
     
           <li>
             <!-- Modificar el href de este a -->
@@ -84,7 +93,7 @@
 
           <li class="sidebar-header">OTROS</li>
           <li><a href="{% url 'questions' %}"><i class="zmdi zmdi-coffee text-danger"></i> <span>Preguntas frecuentes</span></a></li>
-          <li><a href="javaScript:void();"><i class="zmdi zmdi-chart-donut text-success"></i> <span>Proveedores</span></a></li>
+          {% comment %} <li><a href="javaScript:void();"><i class="zmdi zmdi-chart-donut text-success"></i> <span>Proveedores</span></a></li> {% endcomment %}
           <li><a href="javaScript:void();"><i class="zmdi zmdi-share text-info"></i> <span>Sobre Nosotros</span></a></li>
     
         </ul>
@@ -94,7 +103,7 @@
     
     <!--Start topbar header-->
     <header class="topbar-nav">
-     <nav class="navbar navbar-expand fixed-top bg-dark">
+     <nav class="navbar navbar-expand fixed-top">
       <ul class="navbar-nav mr-auto align-items-center">
         <li class="nav-item">
           <a class="nav-link toggle-menu" href="javascript:void();">
@@ -104,14 +113,16 @@
       </ul>
          
       <ul class="navbar-nav align-items-center right-nav-link">
-        <li class="nav-item language">
-          <ul class="dropdown-menu dropdown-menu-right">
+      <li class="nav-item language">
+            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" data-toggle="dropdown"
+              href="javascript:void();"><i class="fa fa-flag"></i></a>
+            <ul class="dropdown-menu dropdown-menu-right">
               <li class="dropdown-item"> <i class="flag-icon flag-icon-cl mr-2"></i> Chile</li>
               <li class="dropdown-item"> <i class="flag-icon flag-icon-it mr-2"></i> Italia</li>
               <li class="dropdown-item"> <i class="flag-icon flag-icon-cn mr-2"></i> China</li>
               <li class="dropdown-item"> <i class="flag-icon flag-icon-es mr-2"></i> España</li>
-          </ul>
-        </li>
+            </ul>
+          </li>
 
         {% if user.is_authenticated %}
         {% if user.is_staff %}
@@ -142,28 +153,36 @@
     </nav>
     </header>
     <!--End topbar header-->
+     <div class="clearfix"></div>
+    <div class="content-wrapper">
+      <div class="container-fluid">
+      <section>
+      {% block content %}
+      
+      {% endblock %}
+      </section>
 
     	<!--start overlay-->
 		  <div class="overlay toggle-menu"></div>
     <!--end overlay-->
+    </div>
+    <!-- End container-fluid-->
+    </div>
+    <!--End content-wrapper-->
+    <!--Start Back To Top Button-->
     <a href="javaScript:void();" class="back-to-top"><i class="fa fa-angle-double-up"></i> </a>
     <!--End Back To Top Button-->
 
-    <section>
-     {% block content %}
-     
-     {% endblock %}
-    </section>
 	
-	<!--Start footer-->
-	{% comment %} <footer class="footer">
+    <!--Start footer-->
+    <footer class="footer">
       <div class="container">
         <div class="text-center">
           Copyright © 2020 Corona Scrum
         </div>
       </div>
     </footer>
-	<!--End footer--> {% endcomment %}
+    <!--End footer-->
 	
   <!--start color switcher-->
    <div class="right-sidebar">
@@ -194,7 +213,7 @@
         <li id="theme10"></li>
         <li id="theme11"></li>
         <li id="theme12"></li>
-		<li id="theme13"></li>
+		    <li id="theme13"></li>
         <li id="theme14"></li>
         <li id="theme15"></li>
       </ul>
@@ -202,14 +221,10 @@
      </div>
    </div>
   <!--end color switcher-->
+
+  
   </div>
-  </div>
-  </div><!--End wrapper-->
-		
-    </div>
-    <!-- End container-fluid-->
-   <!--Start Back To Top Button-->
-    
+  <!--End wrapper-->
 
   <!-- Bootstrap core JavaScript-->
   <script src="{% static 'js/jquery.min.js' %}"></script>
@@ -227,8 +242,7 @@
   <!-- Chart js -->
   <script src="{% static 'plugins/Chart.js/Chart.min.js' %} "></script>
   
- 
   <!-- base js -->
   {% comment %} <script src="{% static 'js/index.js' %}"></script> {% endcomment %}
-</body>
-</html>
+  </body>
+  </html>

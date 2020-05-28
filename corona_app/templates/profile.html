@@ -1,96 +1,87 @@
 {% extends 'base.html'%}
 {% load static %}
 {% block content %}
-<div class="clearfix"></div>
-	
-  <div class="content-wrapper">
-    <div class="container-fluid">
 
-      <div class="row mt-3">
-        <div class="col-lg-4">
-           <div class="card profile-card-2">
+<div class="row mt-3">
+    <div class="col-lg-4">
+        <div class="card profile-card-2">
             <div class="card-img-block">
                 <img class="img-fluid" src="https://via.placeholder.com/800x500" alt="Card image cap">
             </div>
             <div class="card-body pt-5">
                 <img src="https://via.placeholder.com/110x110" alt="profile-image" class="profile">
                 <h5 class="card-title">Corona_Scrum</h5>
-                <p class="card-text">Apoyanos en combatir contra esta pandemia y de la mejor manera #QuedateEnCasa.</p>
+                <p class="card-text">Apoyanos en combatir contra esta pandemia y de la mejor manera
+                    #QuedateEnCasa.</p>
                 <div class="icon-block">
-                  <a href="javascript:void();"><i class="fa fa-facebook bg-facebook text-white"></i></a>
-				  <a href="javascript:void();"> <i class="fa fa-twitter bg-twitter text-white"></i></a>
-				  <a href="javascript:void();"> <i class="fa fa-google-plus bg-google-plus text-white"></i></a>
+                    <a href="javascript:void();"><i class="fa fa-facebook bg-facebook text-white"></i></a>
+                    <a href="javascript:void();"> <i class="fa fa-twitter bg-twitter text-white"></i></a>
+                    <a href="javascript:void();"> <i class="fa fa-google-plus bg-google-plus text-white"></i></a>
                 </div>
             </div>
         </div>
 
-        </div>
+    </div>
 
-        <div class="col-lg-8">
-           <div class="card">
+    <div class="col-lg-8">
+        <div class="card">
             <div class="card-body">
-            <ul class="nav nav-tabs nav-tabs-primary top-icon nav-justified">
-                <li class="nav-item">
-                    <a href="javascript:void();" data-target="#messages" data-toggle="pill" class="nav-link"><i class="icon-envelope-open"></i> <span class="hidden-xs">Noticias</span></a>
-                </li>
-            </ul>
+                <ul class="nav nav-tabs nav-tabs-primary top-icon nav-justified">
+                    <li class="nav-item">
+                        <a href="javascript:void();" data-target="#messages" data-toggle="pill" class="nav-link"><i
+                                class="icon-envelope-open"></i> <span class="hidden-xs">Noticias</span></a>
+                    </li>
+                </ul>
 
                 <div class="tab-pane" id="messages">
                     <div class="alert alert-info alert-dismissible" role="alert">
-				   <button type="button" class="close" data-dismiss="alert">&times;</button>
-				    <div class="alert-icon">
-					 <i class="icon-info"></i>
-				    </div>
-				    <div class="alert-message">
-				      <span><strong>Info!</strong> Lorem Ipsum is simply dummy text.</span>
-				    </div>
-                  </div>
-                  <div class="table-responsive">
-                    <table class="table table-hover table-striped">
-                        <tbody>                                    
-                            <tr>
-                                <td>
-                                   <span class="float-right font-weight-bold">3 hrs ago</span> Here is your a link to the latest summary report from the..
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                   <span class="float-right font-weight-bold">Yesterday</span> There has been a request on your account since that was..
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                   <span class="float-right font-weight-bold">9/10</span> Porttitor vitae ultrices quis, dapibus id dolor. Morbi venenatis lacinia rhoncus. 
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                   <span class="float-right font-weight-bold">9/4</span> Vestibulum tincidunt ullamcorper eros eget luctus. 
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                   <span class="float-right font-weight-bold">9/4</span> Maxamillion ais the fix for tibulum tincidunt ullamcorper eros. 
-                                </td>
-                            </tr>
-                        </tbody> 
-                    </table>
-                  </div>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <div class="alert-icon">
+                            <i class="icon-info"></i>
+                        </div>
+                        <div class="alert-message">
+                            <span><strong>Info!</strong> Lorem Ipsum is simply dummy text.</span>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span class="float-right font-weight-bold">3 hrs ago</span> Here is your
+                                        a link to the latest summary report from the..
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="float-right font-weight-bold">Yesterday</span> There has
+                                        been a request on your account since that was..
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="float-right font-weight-bold">9/10</span> Porttitor vitae
+                                        ultrices quis, dapibus id dolor. Morbi venenatis lacinia rhoncus.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="float-right font-weight-bold">9/4</span> Vestibulum
+                                        tincidunt ullamcorper eros eget luctus.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="float-right font-weight-bold">9/4</span> Maxamillion ais
+                                        the fix for tibulum tincidunt ullamcorper eros.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-      </div>
-      </div>
-        
     </div>
-
-	<!--start overlay-->
-		  <div class="overlay toggle-menu"></div>
-		<!--end overlay-->
-	
-    </div>
-    <!-- End container-fluid-->
-   </div><!--End content-wrapper-->
-   <!--Start Back To Top Button-->
-    <a href="javaScript:void();" class="back-to-top"><i class="fa fa-angle-double-up"></i> </a>
+</div>
 {% endblock %}

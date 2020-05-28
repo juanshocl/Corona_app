@@ -112,7 +112,7 @@ def login_view(request):
 @login_required(login_url = 'login_view')
 def logout_view(request):
     logout(request)
-    return(redirect('login_view'))
+    return(redirect('index'))
 
 
 def reset_password(request):
@@ -126,6 +126,7 @@ class listAPI(ListView):
     template_name = 'listAPI.html'
 
 class comunasAPI(ListView):
+    #Datos de Consumiendo una API
     model = comuna
     template_name = 'comunas.html'
 
@@ -149,6 +150,7 @@ class comunasAPI(ListView):
         return context
 
 class regionAPI(ListView):
+    #Datos de Region, Codigo, Nombre, Poblacion, Etc.
     model = region
     template_name = 'region.html'
 
@@ -176,6 +178,7 @@ class regionAPI(ListView):
 
 
 class activosAPI(ListView):
+    #Casos activos por Comuna
     model = activesCase
     template_name = 'actives.html'
 
@@ -203,6 +206,7 @@ class activosAPI(ListView):
 
 
 class deathsRegionAPI(ListView):
+    #Muertes Confirmadas por Region
     model = deathsporRegion
     template_name = 'deathsRegion.html'
 
@@ -316,7 +320,6 @@ class LineChartJSONView(BaseLineChartView):
 
         for k in regiones:
             reg.append(k.RegionName)
-        #print(reg)
         return reg
 
     def get_data(self):
@@ -342,3 +345,95 @@ class LineChartJSONView(BaseLineChartView):
 
 line_chart = TemplateView.as_view(template_name='line_chart.html')
 line_chart_json = LineChartJSONView.as_view()
+
+class BarChartJSONView(BaseLineChartView):
+    def get_labels(self):
+        x_ax = []
+        
+        queryset = RRDate.objects.all().order_by('-RDDate')[:3]
+
+        for i in reversed(queryset):
+             x_ax.append(i.RDDate)
+    
+        return x_ax
+
+    def get_providers(self):
+        """Return names of datasets."""
+        reg = []
+        regiones = region.objects.all().order_by('Codregion')
+
+        for k in regiones:
+            reg.append(k.RegionName)
+        #print(reg)
+        return reg
+
+    def get_data(self):
+        """Return 3 datasets to plot."""
+        dias = RRDate.objects.all().order_by('-RDDate')[:3]
+        valores = []        
+        for i in reversed(dias):
+            queryset = deathsporRegion.objects.filter(DDate = i.RDDate).order_by('-DDate', 'DCodRegion')
+            valores.append(queryset)
+
+        largo = int(len(valores))
+        ancho = int(len(valores[1]))
+        datos = np.arange((largo*ancho),dtype=np.int64).reshape(largo, ancho)
+        for i in range(0,largo):
+            cont = 0
+            g = valores[i]
+            for j in g:
+                datos[i][cont] = j.Ddeaths
+                cont = cont + 1
+        
+        datos = datos.transpose()   
+        return datos.tolist()
+
+
+line_chart2 = TemplateView.as_view(template_name= 'index.html')
+line_chart_json2 = BarChartJSONView.as_view()
+
+
+class PieChartJSONView(BaseLineChartView):
+    def get_labels(self):
+        x_ax = []
+        
+        queryset = RRDate.objects.all().order_by('-RDDate')[:3]
+
+        for i in reversed(queryset):
+             x_ax.append(i.RDDate)
+    
+        return x_ax
+
+    def get_providers(self):
+        """Return names of datasets."""
+        reg = []
+        regiones = region.objects.all().order_by('Codregion')
+
+        for k in regiones:
+            reg.append(k.RegionName)
+        #print(reg)
+        return reg
+
+    def get_data(self):
+        """Return 3 datasets to plot."""
+        dias = RRDate.objects.all().order_by('-RDDate')[:3]
+        valores = []        
+        for i in reversed(dias):
+            queryset = reportes.objects.values('RComuna__Reg').filter(RDate = i.RDDate).annotate(Tot_Region=Sum('RRecovered')).order_by('RComuna__Reg')
+            valores.append(queryset)
+        largo = int(len(valores))
+        ancho = int(len(valores[1]))
+        datos = np.arange((largo*ancho),dtype=np.int64).reshape(largo, ancho)
+        for i in range(0,largo):
+            cont = 0
+            g = valores[i]
+            for j in g:
+                datos[i][cont] = j['Tot_Region']
+                cont = cont + 1
+        
+        datos = datos.transpose()   
+        return datos.tolist()
+
+
+line_chart3 = TemplateView.as_view(template_name= 'index.html')
+line_chart_json3 = PieChartJSONView.as_view()

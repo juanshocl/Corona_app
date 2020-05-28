@@ -60,8 +60,8 @@ class deathsporRegion(models.Model):
     DCodRegion = models.ForeignKey(region, on_delete=models.CASCADE)
     Ddeaths = models.FloatField(default=None)
 
-    def __str__(self):
-        return self.DDate
+    # def __str__(self):
+    #     return self.DDate
 
 class RRDate(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

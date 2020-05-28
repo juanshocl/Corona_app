@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from corona_app.views import listAPI, comunasAPI, regionAPI, todosreportesAPI, activosAPI, deathsRegionAPI, ChartDataViewSet, line_chart, line_chart_json
+from corona_app.views import listAPI, comunasAPI, regionAPI, todosreportesAPI, activosAPI, deathsRegionAPI, ChartDataViewSet, line_chart, line_chart_json, line_chart_json2, line_chart_json3, line_chart2, line_chart3
 from rest_framework import routers, serializers
 
 
@@ -31,13 +31,14 @@ urlpatterns = [
     path('region/', regionAPI.as_view(),name = 'regionapi' ),
     path('activos/', activosAPI.as_view(),name = 'activosapi' ),
     path('muertes/', deathsRegionAPI.as_view(),name = 'muertesregionapi' ),
-    #path('ultimosreportes/', ultimosreportesAPI.as_view(),name = 'ultimosreportesapi' ),
     path('todosreportes/', todosreportesAPI.as_view(),name = 'todosreportesapi' ),
-    path('', include(router.urls)),
-    #path('api/chart/data/', ChartDataViewSet.as_view()),
+    path('', include(router.urls)), 
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('chart', line_chart, name='line_chart'),
-    path('chartJSON', line_chart_json, name='line_chart_json')
-    
+    path('chartJSON', line_chart_json, name='line_chart_json'),
+    path('chart2', line_chart2, name='line_chart'),
+    path('chartJSON2', line_chart_json2, name='line_chart_json2'),
+    path('chart3', line_chart3, name='line_chart'),
+    path('chartJSON3', line_chart_json3, name='line_chart_json3'),
 
 ]
