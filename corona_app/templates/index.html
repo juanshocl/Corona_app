@@ -9,7 +9,7 @@
 
     <!--Start Dashboard Content-->
     <!-- Datos Estadisticos -->
-    {% comment %} {% if mostrar %} {% endcomment %}
+    {% if mostrar %}
     <div class="card mt-3">
       <div class="card-content">
         <div class="row row-group m-0">
@@ -79,9 +79,9 @@
         </div>
       </div>
     </div>
-    {% comment %} {% else %}
+    {% else %}
     <h1>No existen datos para mostrar</h1>
-    {% endif %} {% endcomment %}
+    {% endif %} 
 
     <!-- Fin Datos Estadisticos -->
     <div class="row">

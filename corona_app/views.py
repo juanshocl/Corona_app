@@ -10,6 +10,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.db.models import Avg, Max, Min, Sum, Count
+from django.views.defaults import page_not_found
 
 import csv
 import urllib.request
@@ -36,37 +37,42 @@ from chartjs.views.lines import BaseLineChartView
 # Create your views here.
 
 def index(request):
+
     #Obtencion de datos desde la Base de datos.
-    dia = RRDate.objects.all().order_by('-RDDate')[:3]
-    diaanterior = int(reportes.objects.filter(RDate = dia[1].RDDate).aggregate(Sum('RConfirmed'))['RConfirmed__sum'])
-    dosAntes = int(reportes.objects.filter(RDate = dia[2].RDDate).aggregate(Sum('RConfirmed'))['RConfirmed__sum'])
-    
+    try:
+        dia = RRDate.objects.all().order_by('-RDDate')[:3]
+    except RRDate.DoesNotExist:
+        dia = False
 
-    Confirmados = int(reportes.objects.filter(RDate = dia[0].RDDate).aggregate(Sum('RConfirmed'))['RConfirmed__sum'])
-    ConfirmRepAnterior = int(reportes.objects.filter(RDate = dia[1].RDDate).aggregate(Sum('RConfirmed'))['RConfirmed__sum'])
-    Activos = int(reportes.objects.filter(RDate = dia[0].RDDate).aggregate(Sum('RActive'))['RActive__sum'])
-    ActivosRepAnterior = int(reportes.objects.filter(RDate = dia[1].RDDate).aggregate(Sum('RActive'))['RActive__sum'])
-    Nuevos = Confirmados - diaanterior
-    #Totales
-    TotActives = Activos
-    TotNuevos = Nuevos
-    TotContagiados = Confirmados
-    TotalFallecidosDiaAnterior = int(deathsporRegion.objects.filter(DDate = dia[1].RDDate).aggregate(Sum('Ddeaths'))['Ddeaths__sum'])
-    TotalFallecidos = int(deathsporRegion.objects.filter(DDate = dia[0].RDDate).aggregate(Sum('Ddeaths'))['Ddeaths__sum'])
-    TotalRecuperados = Confirmados - Activos
-    TotalRecuperadosRepAnterior = ConfirmRepAnterior - ActivosRepAnterior
-    #Porcentajes
-    PorActivoReport = float(((TotContagiados - diaanterior)*100)/diaanterior)
-    PorCasoNuevo = float(((diaanterior - dosAntes)*100)/dosAntes)
-    PorTotContagios = float((Confirmados - diaanterior)*100)/diaanterior
-    PorTotFallecidos = float(((TotalFallecidos - TotalFallecidosDiaAnterior )*100))/TotalFallecidosDiaAnterior
-    PorTotRecuperados = float(((TotalRecuperados - TotalRecuperadosRepAnterior )*100)/TotalRecuperadosRepAnterior)
+    if dia:
+        diaanterior = int(reportes.objects.filter(RDate = dia[1].RDDate).aggregate(Sum('RConfirmed'))['RConfirmed__sum'])
+        dosAntes = int(reportes.objects.filter(RDate = dia[2].RDDate).aggregate(Sum('RConfirmed'))['RConfirmed__sum'])
 
-    #Table, Trae los Top 10 del ultimo dia del reporte    
-    table = reportes.objects.filter(RDate=dia[0].RDDate).order_by('-RConfirmed')[:10]
+        Confirmados = int(reportes.objects.filter(RDate = dia[0].RDDate).aggregate(Sum('RConfirmed'))['RConfirmed__sum'])
+        ConfirmRepAnterior = int(reportes.objects.filter(RDate = dia[1].RDDate).aggregate(Sum('RConfirmed'))['RConfirmed__sum'])
+        Activos = int(reportes.objects.filter(RDate = dia[0].RDDate).aggregate(Sum('RActive'))['RActive__sum'])
+        ActivosRepAnterior = int(reportes.objects.filter(RDate = dia[1].RDDate).aggregate(Sum('RActive'))['RActive__sum'])
+        Nuevos = Confirmados - diaanterior
+        #Totales
+        TotActives = Activos
+        TotNuevos = Nuevos
+        TotContagiados = Confirmados
+        TotalFallecidosDiaAnterior = int(deathsporRegion.objects.filter(DDate = dia[1].RDDate).aggregate(Sum('Ddeaths'))['Ddeaths__sum'])
+        TotalFallecidos = int(deathsporRegion.objects.filter(DDate = dia[0].RDDate).aggregate(Sum('Ddeaths'))['Ddeaths__sum'])
+        TotalRecuperados = Confirmados - Activos
+        TotalRecuperadosRepAnterior = ConfirmRepAnterior - ActivosRepAnterior
+        #Porcentajes
+        PorActivoReport = float(((TotContagiados - diaanterior)*100)/diaanterior)
+        PorCasoNuevo = float(((diaanterior - dosAntes)*100)/dosAntes)
+        PorTotContagios = float((Confirmados - diaanterior)*100)/diaanterior
+        PorTotFallecidos = float(((TotalFallecidos - TotalFallecidosDiaAnterior )*100))/TotalFallecidosDiaAnterior
+        PorTotRecuperados = float(((TotalRecuperados - TotalRecuperadosRepAnterior )*100)/TotalRecuperadosRepAnterior)
 
-
-    return render(request,'index.html',{
+        #Table, Trae los Top 10 del ultimo dia del reporte    
+        table = reportes.objects.filter(RDate=dia[0].RDDate).order_by('-RConfirmed')[:10]
+        
+        return render(request,'index.html',{
+        'mostrar': True,
         'activos': TotActives,
         'nuevos': TotNuevos,
         'contagiados': TotContagiados,
@@ -79,6 +85,11 @@ def index(request):
         'PorTotReco' : PorTotRecuperados,
         'tablas': table,
         })
+    else:
+        return render(request,'index.html',{
+        'mostrar': False
+        })
+
 
 def situation(request):
     return render(request,'profile.html',{})
@@ -139,7 +150,7 @@ class comunasAPI(ListView):
         for column in csvfile:
 
             if bandera >0:
-                 _, created = comuna.objects.get_or_create(
+                _, created = comuna.objects.get_or_create(
                 Reg = region.objects.get(Codregion=column[1]),
                 ComunaName = column[2],
                 CodComuna = column[3],
@@ -437,3 +448,6 @@ class PieChartJSONView(BaseLineChartView):
 
 line_chart3 = TemplateView.as_view(template_name= 'index.html')
 line_chart_json3 = PieChartJSONView.as_view()
+ 
+def mi_error_404(request, exception):
+    return page_not_found(request, '404.html')

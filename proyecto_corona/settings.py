@@ -23,7 +23,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'c@tgq5cg3j6#=(hne*@)qx5o+j^v$*6ce^h9s0knra^0l&_o67'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -144,3 +145,6 @@ REST_FRAMEWORK = {
 #     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
 #     'PAGE_SIZE': 100
 # }
+
+import mimetypes
+mimetypes.add_type("text/css", ".css", True)
