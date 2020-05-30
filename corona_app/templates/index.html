@@ -8,6 +8,8 @@
 
 
     <!--Start Dashboard Content-->
+    <!-- Datos Estadisticos -->
+    {% comment %} {% if mostrar %} {% endcomment %}
     <div class="card mt-3">
       <div class="card-content">
         <div class="row row-group m-0">
@@ -77,8 +79,11 @@
         </div>
       </div>
     </div>
+    {% comment %} {% else %}
+    <h1>No existen datos para mostrar</h1>
+    {% endif %} {% endcomment %}
 
-    <!-- Fin datos de numero-->
+    <!-- Fin Datos Estadisticos -->
     <div class="row">
       <div class="col-12 col-lg-12 col-xl-12">
         {% if user.is_authenticated %}
