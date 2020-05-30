@@ -15,9 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from corona_app.views import listAPI, comunasAPI, regionAPI, todosreportesAPI, activosAPI, deathsRegionAPI, ChartDataViewSet, line_chart, line_chart_json, line_chart_json2, line_chart_json3, line_chart2, line_chart3
+from corona_app.views import listAPI, comunasAPI, regionAPI, todosreportesAPI, activosAPI, deathsRegionAPI, ChartDataViewSet, line_chart, line_chart_json, line_chart_json2, line_chart_json3, line_chart2, line_chart3, cargardatos
 from rest_framework import routers, serializers
-
+from django.contrib.auth.decorators import login_required
 
 router = routers.DefaultRouter()
 router.register('chardata', ChartDataViewSet)
@@ -26,12 +26,12 @@ router.register('chardata', ChartDataViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('corona_app.urls')),
-    path('datos/', listAPI.as_view(),name = 'listapi' ),
-    path('comunas/', comunasAPI.as_view(),name = 'comunasapi' ),
-    path('region/', regionAPI.as_view(),name = 'regionapi' ),
-    path('activos/', activosAPI.as_view(),name = 'activosapi' ),
-    path('muertes/', deathsRegionAPI.as_view(),name = 'muertesregionapi' ),
-    path('todosreportes/', todosreportesAPI.as_view(),name = 'todosreportesapi' ),
+    path('datos/', login_required(listAPI.as_view()),name = 'listapi' ),
+    path('comunas/', login_required(comunasAPI.as_view()),name = 'comunasapi' ),
+    path('region/', login_required(regionAPI.as_view()),name = 'regionapi' ),
+    path('activos/', login_required(activosAPI.as_view()),name = 'activosapi' ),
+    path('muertes/', login_required(deathsRegionAPI.as_view()),name = 'muertesregionapi' ),
+    path('todosreportes/', login_required(todosreportesAPI.as_view()),name = 'todosreportesapi' ),
     path('', include(router.urls)), 
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('chart', line_chart, name='line_chart'),
@@ -40,5 +40,6 @@ urlpatterns = [
     path('chartJSON2', line_chart_json2, name='line_chart_json2'),
     path('chart3', line_chart3, name='line_chart'),
     path('chartJSON3', line_chart_json3, name='line_chart_json3'),
+    path('cargardatos', cargardatos, name='cargardatos'),
 
 ]

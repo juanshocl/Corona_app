@@ -8,8 +8,9 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.db.models import Avg, Max, Min, Sum, Count
+
 
 import csv
 import urllib.request
@@ -30,6 +31,8 @@ from rest_framework.renderers import JSONRenderer
 from django.views.generic import TemplateView
 from chartjs.views.lines import BaseLineChartView
 
+#Celery
+from .task import CargarDatosComuna, CargaDatosRegion, CargarDatosActivos, CargarMuertesPorRegion, CargarTodosLosReportes
 
 
 
@@ -125,8 +128,13 @@ class listAPI(ListView):
     model = comuna
     template_name = 'listAPI.html'
 
+
 class comunasAPI(ListView):
-    #Datos de Consumiendo una API
+    model = comuna
+    template_name = 'comunas.html'
+    #CargarDatosComuna.delay()
+
+    #Datos de Consumiendo desde un archivo CSV 
     model = comuna
     template_name = 'comunas.html'
 
@@ -146,13 +154,15 @@ class comunasAPI(ListView):
                 Poblation = column[4]
                 )
             bandera = bandera + 1
-        context = {}
+            
+            context = {}
         return context
 
 class regionAPI(ListView):
-    #Datos de Region, Codigo, Nombre, Poblacion, Etc.
+    #Datos de Region, Codigo, Nombre, Poblacion, Etc Desde una API.
     model = region
     template_name = 'region.html'
+    #CargaDatosRegion.delay()
 
     def get_context_data(self, **kwargs):
         context = super(regionAPI, self).get_context_data(**kwargs)
@@ -181,6 +191,7 @@ class activosAPI(ListView):
     #Casos activos por Comuna
     model = activesCase
     template_name = 'actives.html'
+    #CargarDatosActivos.delay()
 
     def get_context_data(self, **kwargs):
         context = super(activosAPI, self).get_context_data(**kwargs)
@@ -203,12 +214,15 @@ class activosAPI(ListView):
                     AcCod_comuna = comuna.objects.get(CodComuna=df[3][j]),
                     AcCantidad = dato
                     )
+        context = {}
+        return context
 
 
 class deathsRegionAPI(ListView):
     #Muertes Confirmadas por Region
     model = deathsporRegion
     template_name = 'deathsRegion.html'
+    #CargarMuertesPorRegion.delay()
 
     def get_context_data(self, **kwargs):
         context = super(deathsRegionAPI, self).get_context_data(**kwargs)
@@ -239,12 +253,14 @@ class deathsRegionAPI(ListView):
                 DCodRegion = region.objects.get(Codregion=reg),
                 Ddeaths = float(dato)
                 )
-
+        context = {}
+        return context
 
 class todosreportesAPI(ListView):
     #Confirmados Incrementales
     model = reportes
     template_name = 'todosreportes.html'
+    #CargarTodosLosReportes.delay()
 
     def get_context_data(self, **kwargs):
         context = super(todosreportesAPI, self).get_context_data(**kwargs)
@@ -437,3 +453,10 @@ class PieChartJSONView(BaseLineChartView):
 
 line_chart3 = TemplateView.as_view(template_name= 'index.html')
 line_chart_json3 = PieChartJSONView.as_view()
+
+
+
+
+def cargardatos(request):
+    sleepy(15)
+    return HttpResponse('Listo!')
