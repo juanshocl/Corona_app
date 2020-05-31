@@ -41,9 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'chartjs',
     'corona_app',
-    'django_celery_beat',
-    'django_celery_results',
-    'kombu.transport.django',
 ]
 
 MIDDLEWARE = [
