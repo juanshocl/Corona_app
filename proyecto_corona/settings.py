@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-from celery.schedules import crontab
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,6 +24,7 @@ SECRET_KEY = 'c@tgq5cg3j6#=(hne*@)qx5o+j^v$*6ce^h9s0knra^0l&_o67'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+#DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -140,28 +140,4 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
-}
-
-
-# CELERY_BROKER_URL = ''
-
-# CELERY_ACCEPT_CONTENT = ['json']
-
-# CELERY_TASK_SERIALIZER = 'json'
-
-# CELERY 
-#BROKER_URL = 'amqp://localhost:5672//' #'redis://localhost:6379'
-#CELERY_RESULT_BACKEND = 'amqp' #'redis://redis:6379/0' 
-BROKER_URL = 'django://'#'amqp://vtlgwkpl:PEwlEu...@woodpecker.rmq.cloudamqp.com/vtlgwkpl'#'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'amqp://vtlgwkpl:PEwlEu...@woodpecker.rmq.cloudamqp.com/vtlgwkpl'#'redis://'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'America/Santiago'
-CELERY_BEAT_SCHEDULE = {
-    'task-number-one': {
-        'task': 'proyecto_corona.tasks.CargarTodosLosDatos',
-        'schedule': crontab(minute=00, hour=4)
-        #'args': (*args)
-    }
 }
