@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.template.context_processors import request
 from django.views.generic import ListView
-from corona_app.models import reportes, comuna, region, activesCase, deathsporRegion, RRDate
+from corona_app.models import reportes, comuna, region, activesCase, deathsporRegion, RRDate, ErrorTable
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -143,15 +143,19 @@ def add_person(request):
     status = 'NO_CONTENT'
     if request.method == 'POST':
         try:
-            notice = Noticias()
-            notice.titular = request.POST.get('txtTitular')
-            notice.descripcion = request.POST.get('txtDescripcion')
-            notice.fuente = request.POST.get('txtFuente')
-            notice.save()
-            status = 'OK'
+            if request.POST.get('txtTitular') != null or request.POST.get('txtDescripcion') !=null or request.POST.get('txtFuente') != null :
+                notice = Noticias()
+                notice.titular = request.POST.get('txtTitular')
+                notice.descripcion = request.POST.get('txtDescripcion')
+                notice.fuente = request.POST.get('txtFuente')
+                notice.save()
+                status = 'OK'
         except :
             status = 'ERROR'
-            print('ERROR EN EL INGRESO DE LA NOTICIA')
+            error = ErrorTable()
+            mensajeError = 'ERROR EN EL INGRESO DE LA NOTICIA'
+            error.Error = mensajeError
+            error.save()
     return render(request,'forms.html',{'status':status})
 
 def statistics(request):
@@ -173,6 +177,10 @@ def login_view(request):
             return HttpResponseRedirect(reverse('index'))
         else:
             status = 'ERROR'
+            error = ErrorTable()
+            mensajeError = 'ERROR AL INICIAR SESIÓN'
+            error.Error = mensajeError
+            error.save()
             messages.error(request, 'Error al iniciar sesión :c')
     variables = {'status': status,
                  'mensaje': mensaje}

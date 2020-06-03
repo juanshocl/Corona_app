@@ -62,7 +62,7 @@
           <li>
             <!-- Modificar el href de este a -->
             <a href="{% url 'add_person' %}">
-              <i class="zmdi zmdi-format-list-bulleted"></i> <span>Nuevo Registro</span>
+              <i class="zmdi zmdi-format-list-bulleted"></i> <span>Nueva Noticia</span>
             </a>
           </li>
             
@@ -74,12 +74,6 @@
           </li>
           {% endif %}
     
-          <li>
-            <!-- Modificar el href de este a -->
-            <a href="{% url 'statistics' %}">
-              <i class="zmdi zmdi-grid"></i> <span>Estadisticas</span>
-            </a>
-          </li>
     
           {% if user.is_anonymous %}
           <li>
@@ -94,8 +88,6 @@
           <li class="sidebar-header">OTROS</li>
           <li><a href="{% url 'questions' %}"><i class="zmdi zmdi-coffee text-danger"></i> <span>Preguntas frecuentes</span></a></li>
           {% comment %} <li><a href="javaScript:void();"><i class="zmdi zmdi-chart-donut text-success"></i> <span>Proveedores</span></a></li> {% endcomment %}
-          <li><a href="javaScript:void();"><i class="zmdi zmdi-share text-info"></i> <span>Sobre Nosotros</span></a></li>
-    
         </ul>
        
        </div>

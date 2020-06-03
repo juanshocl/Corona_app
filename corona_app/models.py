@@ -2,9 +2,13 @@ from django.db import models
 import uuid 
 
 class Noticias(models.Model):
-    titular = models.CharField(max_length=200)
-    descripcion = models.TextField(max_length=500)
-    fuente = models.CharField(max_length=200)
+    titular = models.CharField(max_length=200,primary_key=True,default=None)
+    descripcion = models.TextField(max_length=500, null=None)
+    fuente = models.CharField(max_length=200, default=None)
+
+class ErrorTable(models.Model):
+    idError = models.DateField(auto_now=True)
+    Error = models.CharField(max_length = 800, null=False)
 
 # Create your models here.
 
