@@ -1,6 +1,8 @@
 from django.contrib import admin
 from corona_app.models import region, comuna, reportes, activesCase, deathsporRegion, RRDate
+from .models import Noticias
 
+admin.site.register(Noticias)
 # Register your models here.
 @admin.register(region)
 class regionAdmin(admin.ModelAdmin):

@@ -33,6 +33,7 @@ from chartjs.views.lines import BaseLineChartView
 
 
 
+from corona_app.models import Noticias
 # Create your views here.
 
 def index(request):
@@ -81,10 +82,24 @@ def index(request):
         })
 
 def situation(request):
-    return render(request,'profile.html',{})
+    noticias = Noticias.objects.all()
+    contexto = {'noticia': noticias}
+    return render(request,'profile.html', contexto)
 
 def add_person(request):
-    return render(request,'forms.html',{'list':list})
+    status = 'NO_CONTENT'
+    if request.method == 'POST':
+        try:
+            notice = Noticias()
+            notice.titular = request.POST.get('txtTitular')
+            notice.descripcion = request.POST.get('txtDescripcion')
+            notice.fuente = request.POST.get('txtFuente')
+            notice.save()
+            status = 'OK'
+        except :
+            status = 'ERROR'
+            print('ERROR EN EL INGRESO DE LA NOTICIA')
+    return render(request,'forms.html',{'status':status})
 
 def statistics(request):
     return render(request,'tables.html',{})
