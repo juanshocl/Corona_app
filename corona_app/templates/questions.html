@@ -1,0 +1,124 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block content %}
+
+<div style="margin-top: 60px; margin-left:250px">
+    <h1>Preguntas frecuentes</h1>
+    <h6>Preguntas frecuentes sobre el Covid 19</h6>
+</div>
+
+ <div id="accordion">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+         1) ¿Que es el Coronavirus?
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+       El Nuevo Coronavirus COVID-19 es una cepa de la familia de coronavirus que no se había identificado 
+       previamente en humanos. Es el nombre definitivo otorgado por la OMS. Los coronavirus son causantes de enfermedades 
+       que van desde el resfriado común hasta enfermedades más graves, como Insuficiencia Respiratoria Aguda Grave..
+      </div>
+    </div>
+
+  </div>
+ </div>
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+         2) ¿Cómo se contagia?
+        </button>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+        El virus se transmite de persona a persona cuando tiene contacto cercano con un enfermo. 
+        Por ejemplo, al vivir bajo el mismo techo, compartir la misma sala en un hospital, viajar por 
+        varias horas en un mismo medio de transporte, o cuidar a un enfermo sin la debida medida de protección.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" id="headingThree">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          3) ¿Cúal es la población de riesgo?
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+      <div class="card-body">
+        Solo un 2% de las personas que se ha contagiado ha muerto, pero pueden desarrollar una enfermedad más 
+        fuerte las personas mayores o quienes padecen de afecciones médicas preexistentes, como hipertensión arterial, 
+        problemas cardíacos o diabetes.
+      </div>
+    </div>
+
+  </div>
+
+   <div class="card">
+    <div class="card-header" id="headingFour">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+          4) ¿Cúanto dura el virus en mi cuerpo?
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+      <div class="card-body">
+        El «período de incubación» es el tiempo que transcurre entre la infección por el virus y la aparición 
+        de los síntomas de la enfermedad. La mayoría de las estimaciones respecto al periodo de incubación de COVID-19 
+        oscilan entre 1 y 14 días, y en general se sitúan en torno a cinco días.
+      </div>
+    </div>
+
+
+    
+</div>
+
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+  <ol class="carousel-indicators">
+    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+  </ol>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <iframe width="1026" height="577" src="https://www.youtube.com/embed/XviCg5FcQrM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="carousel-item">
+      <iframe width="1026" height="577" src="https://www.youtube.com/embed/izcrkm7sfKM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="carousel-item">
+      <iframe width="1026" height="577" src="https://www.youtube.com/embed/FioxTyYioC4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+ </div>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

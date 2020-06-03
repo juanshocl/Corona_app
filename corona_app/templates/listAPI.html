@@ -1,0 +1,20 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block content %}
+<h1>Carga de datos al sistema</h1>
+        <li>
+            <a href="{% url 'regionapi' %}"> 1.- Cargar Datos de Regiones al sistema</a><br>
+        </li>
+        <li>            
+            <a href="{% url 'comunasapi' %}"> 2.- Cargar Datos de comuna al sistema</a><br>
+        </li>
+        <li>
+            <a href="{% url 'activosapi' %}"> 3.- Carga Datos Activos </a><br>
+        </li>
+        <li>
+            <a href="{% url 'muertesregionapi' %}"> 4.- Reportes de muertes por regiones </a><br>
+        </li>
+        <li>
+            <a href="{% url 'todosreportesapi' %}"> 5.- Cargar todos los reportes </a><br>
+        </li>
+{% endblock %}
