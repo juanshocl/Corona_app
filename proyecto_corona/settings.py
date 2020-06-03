@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'chartjs',
     'corona_app',
+    
 ]
 
 MIDDLEWARE = [
