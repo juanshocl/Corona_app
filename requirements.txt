@@ -4,7 +4,7 @@ billiard==3.6.3.0
 cffi==1.14.0
 click==6.2
 distlib==0.3.0
-Django==3.0.6
+Django==3.0.7
 django-chartjs==2.1.0
 django-filter==2.2.0
 django-timezone-field==4.0
